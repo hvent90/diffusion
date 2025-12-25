@@ -42,7 +42,7 @@ def train() -> None:
 
             # Calculate the loss
             loss = F.mse_loss(noise_pred, noise)
-            loss.backward(loss)
+            loss.backward()
             losses.append(loss.item())
 
             # Update the model parameters with the optimizer
