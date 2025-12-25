@@ -1,0 +1,24 @@
+# Environment
+.env
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Type checking
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Model outputs
+dist/
+
+# OS
+.DS_Store
