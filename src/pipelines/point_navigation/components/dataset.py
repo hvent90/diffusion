@@ -7,7 +7,7 @@ class TrajectorySample(TypedDict):
     trajectory: torch.Tensor  # (32, 2)
 
 class TrajectoryDataset(torch.utils.data.Dataset):
-    def __init__(self, n_samples: int = 10000, num_steps: int = 32):
+    def __init__(self, n_samples: int = 30000, num_steps: int = 32):
         self.data: list[TrajectorySample] = []
         # Generate and store all data here
         for _ in range(n_samples):
