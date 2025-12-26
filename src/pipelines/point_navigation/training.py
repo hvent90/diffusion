@@ -7,15 +7,16 @@ from matplotlib import pyplot as plt
 
 from src.lib.get_device import get_device
 from src.pipelines.point_navigation.components.dataset import get_dataloader
-from src.pipelines.point_navigation.components.model import get_model
+from src.pipelines.point_navigation.components.model import TrajectoryDiffusionModel
 from src.pipelines.point_navigation.components.scheduler import get_scheduler
+from src.pipelines.point_navigation.pipeline import PointNavigationPipeline
 
 
 def train() -> None:
     scheduler = get_scheduler()
-    model = get_model()
-    train_dataloader = get_dataloader()
     device = get_device()
+    model = TrajectoryDiffusionModel().to(device)
+    train_dataloader = get_dataloader()
 
     # Training loop
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
@@ -65,13 +66,10 @@ def train() -> None:
     axs[1].plot(np.log(losses))
     plt.show()
 
-    # Save
-    os.makedirs("dist/point_navigation", exist_ok=True)
-    torch.save({
-        "model_state_dict": model.state_dict(),
-        "scheduler_config": scheduler.config,
-    }, "dist/point_navigation/model.pt")
-    print("Model saved to dist/point_navigation/model.pt")
+    # Save as diffusers pipeline
+    pipeline = PointNavigationPipeline(model=model, scheduler=scheduler)
+    pipeline.save_pretrained("dist/point_navigation")
+    print("Pipeline saved to dist/point_navigation")
 
 if __name__ == '__main__':
     train()

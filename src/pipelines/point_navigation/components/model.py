@@ -1,7 +1,11 @@
 import math
 import torch
 import torch.nn as nn
+from diffusers.configuration_utils import ConfigMixin, register_to_config
+from diffusers.models.modeling_utils import ModelMixin
+
 from src.lib.get_device import get_device
+
 
 def sinusoidal_embedding(timesteps: torch.Tensor, dimensions: int) -> torch.Tensor:
     """
@@ -19,7 +23,8 @@ def sinusoidal_embedding(timesteps: torch.Tensor, dimensions: int) -> torch.Tens
     args = timesteps.float().unsqueeze(1) * freqs.unsqueeze(0) # (Batch size, 32)
     return torch.cat([torch.sin(args), torch.cos(args)], dim=-1)
 
-class TrajectoryDiffusionModel(nn.Module):
+class TrajectoryDiffusionModel(ModelMixin, ConfigMixin):
+    @register_to_config
     def __init__(self, num_steps: int = 32, time_embed_dim: int = 64, hidden_dim: int = 256):
         super().__init__()
         self.num_steps = num_steps
