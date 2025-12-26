@@ -1,28 +1,15 @@
 from huggingface_hub import get_full_repo_name, HfApi, create_repo, ModelCard
 import os
 from dotenv import load_dotenv
+from src.lib.publish import publish
 
 load_dotenv()
 
-def publish() -> None:
-    token = os.getenv("HF_TOKEN")
+def publish_butterfly() -> None:
     model_name = "butterflies"
+    token = os.getenv("HF_TOKEN")
     hub_model_id = get_full_repo_name(model_name, token=token)
-
-    create_repo(hub_model_id, token=token)
-    api = HfApi()
-    api.upload_folder(
-        folder_path="dist/butterfly/scheduler", path_in_repo="", repo_id=hub_model_id, token=token
-    )
-    api.upload_folder(folder_path="dist/butterfly/unet", path_in_repo="", repo_id=hub_model_id, token=token)
-    api.upload_file(
-        token=token,
-        path_or_fileobj="dist/butterfly/model_index.json",
-        path_in_repo="model_index.json",
-        repo_id=hub_model_id,
-    )
-
-    content = f"""
+    publish(model_name, f"""
     ---
     license: mit
     tags:
@@ -45,10 +32,7 @@ def publish() -> None:
     image = pipeline().images[0]
     image
     ```
-    """
-
-    card = ModelCard(content)
-    card.push_to_hub(hub_model_id, token=token)
+    """)
 
 if __name__ == "__main__":
-    publish()
+    publish_butterfly()
