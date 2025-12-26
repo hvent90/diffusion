@@ -38,8 +38,8 @@ class TrajectoryDataset(torch.utils.data.Dataset):
         return self.data[idx]
     
 
-def get_dataloader() -> torch.utils.data.DataLoader:
+def get_dataloader(batch_size: int = 64) -> torch.utils.data.DataLoader:
     dataset = TrajectoryDataset()
     return torch.utils.data.DataLoader(
-        dataset, batch_size=64, shuffle=True
+        dataset, batch_size=batch_size, shuffle=True
     )

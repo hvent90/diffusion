@@ -16,7 +16,7 @@ def train() -> None:
     scheduler = get_scheduler()
     device = get_device()
     model = TrajectoryDiffusionModel().to(device)
-    train_dataloader = get_dataloader()
+    train_dataloader = get_dataloader(batch_size=64)
 
     # Training loop
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
